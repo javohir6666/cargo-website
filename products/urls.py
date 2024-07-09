@@ -1,17 +1,15 @@
-from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from . import views
-from .views import import_orders, import_products
+from .views import import_shipments,import_uztracking
 
 router = routers.DefaultRouter()
-
-router.register(r'products', views.ProductList, 'products')
-router.register(r'orders', views.OrderList, 'orders')
+router.register(r'shipments', views.ShipmentTrackingList, 'shipments')
+router.register(r'uztrackings', views.UzTrackingList, 'uztrackings')
 
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('import-products/', import_products, name='import-products'),
-    path('import-orders/', import_orders, name='import-products'),
+    path('import-shipments/', import_shipments, name='import-shipments'),
+    path('import-uztrackings/', import_uztracking, name='import-uztrackings'),
 ]
