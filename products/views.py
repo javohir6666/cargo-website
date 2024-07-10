@@ -6,29 +6,39 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
-
 from .models import ShipmentTracking, UzTracking
 from .serializers import ShipmentTrackingSerializer, UzTrackingSerializer
-from users.models import CustomUser
-
+import django_filters.rest_framework
+from django_filters.rest_framework import DjangoFilterBackend
 import pandas as pd
+   
+class ShipmentTrackingFilter(django_filters.FilterSet):
+    tracking_code = django_filters.CharFilter(field_name='tracking_code', lookup_expr='exact')
 
+    class Meta:
+        model = ShipmentTracking
+        fields = ['tracking_code']
 
 class ShipmentTrackingList(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = ShipmentTrackingSerializer
     queryset = ShipmentTracking.objects.all()
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['tracking_code', 'customer']
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ShipmentTrackingFilter
     
+    
+    
+      
 class UzTrackingList(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = UzTrackingSerializer
     queryset = UzTracking.objects.all()
     filter_backends = [filters.SearchFilter]
-    search_fields = ['tracking_code', 'customer']
+    search_fields = ['tracking_code']
+    
+    
     
 #   IMPORT SHIPMENTS
 @api_view(['POST'])
